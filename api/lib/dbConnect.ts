@@ -1,41 +1,35 @@
-import mongoose, { Schema, Document, VirtualType } from "mongoose";
-import { Column, LandRecord, Village } from "@/types";
+import mongoose from "mongoose";
 
-const columnSchema = new Schema<Column>(
-  {
-    id: { type: String, required: true },
-    name: { type: String, required: true },
-    type: { type: String, required: true, enum: ["text", "number"] },
-  },
-  { _id: false }
-);
+const MONGODB_URI = process.env.MONGODB_URI;
 
-const LandRecordSchema = new Schema<LandRecord>(
-  {
-    id: { type: String, required: true },
-  },
-  { strict: false, _id: false }
-);
+if (!MONGODB_URI) {
+  throw new Error(
+    "Please define the MONGODB_URI environment variable inside .env.local"
+  );
+}
 
-const villageSchema = new Schema<Village>(
-  {
-    name: { type: String, required: true },
-    nameTamil: { type: String, required: true },
-    columns: [columnSchema],
-    records: [LandRecordSchema],
-    createdAt: { type: String, required: true },
-    updatedAt: { type: String, required: true },
-  },
-  {
-    timestamps: false,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function dbConnect() {
+  if (cached.conn) {
+    return cached.conn;
   }
-);
 
-villageSchema.virtual("id").get(function () {
-  return this._id.toHexString();
-});
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+    };
 
-export default mongoose.models.village ||
-  mongoose.model<Village>("village", villageSchema);
+    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+      return mongoose;
+    });
+  }
+  cached.conn = await cached.promise;
+  return cached.conn;
+}
+
+export default dbConnect;

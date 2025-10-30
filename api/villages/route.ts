@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import dbConnect from '../lib/dbConnect';
 import Village from '../models/villageModel';
-import { SEED_VILLAGES, DEFAULT_COLUMNS } from '../../constants'
+import { SEED_VILLAGES, DEFAULT_COLUMNS } from '../../constants'; // This path is correct
 
 /**
  * Seeds the database with initial data if it's empty.
@@ -32,7 +32,7 @@ const seedDatabase = async () => {
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  await new dbConnect();
+  await dbConnect(); // <-- CORRECTED: Removed 'new'
 
   switch (req.method) {
     // GET /api/villages - Get all villages

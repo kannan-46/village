@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import dbConnect from '../../lib/dbConnect'
-import Village from '../models/villageModel';
+import dbConnect from '../../lib/dbConnect'; // This path is correct
+import Village from '../../models/villageModel'; // <-- CORRECTED: Path changed from ../ to ../../
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  await new dbConnect();
+  await dbConnect(); // <-- CORRECTED: Removed 'new'
   
   const { id } = req.query; // This is the [id] from the filename
 
@@ -39,7 +39,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       try {
         const deletedVillage = await Village.findByIdAndDelete(id);
         if (!deletedVillage) {
-          return res.status(404).json({ message: 'Village not found' });
+          return res.status(44).json({ message: 'Village not found' });
         }
         res.status(200).json({ message: 'Village deleted successfully', id });
       } catch (error) {

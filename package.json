@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@google/genai": "^1.27.0",
-    "@vercel/node": "^5.5.2",
     "mongodb": "^6.20.0",
     "mongoose": "^8.19.2",
     "react": "^19.2.0",
