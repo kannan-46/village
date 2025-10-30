@@ -1,0 +1,5 @@
+
+{
+  "name": "Village Land Record Manager",
+  "description": "A professional, responsive single-page application (SPA) for a Sub-Registrar to browse villages and manage each village’s land records. Features AI-assisted record creation using Gemini, data import/export, and debounced auto-saving."
+}
